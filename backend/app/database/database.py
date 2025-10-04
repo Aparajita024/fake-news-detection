@@ -9,4 +9,4 @@ database = client[settings.DATABASE_NAME]
 # --- Collections ---
 feedback_collection = database.get_collection("feedback")
 
-print(f"✅ MongoDB client initialized for database: '{settings.DATABASE_NAME}'")
+print(f"MongoDB client initialized for database: '{settings.DATABASE_NAME}'")

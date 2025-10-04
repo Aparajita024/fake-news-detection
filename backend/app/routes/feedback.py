@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 from ..models.models import FeedbackIn, FeedbackOut
-from ..services.feedback_service import save_feedback_service
+from ..services.feedback_services import save_feedback_service
 
 router = APIRouter()
 

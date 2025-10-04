@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+from typing import List
 from pydantic import HttpUrl
 
 def fetch_article_text_from_url(url: str) -> str:

@@ -64,3 +64,9 @@ class FeedbackOut(BaseModel):
             # Convert MongoDB's ObjectId to a string
             'id': lambda v: str(v)
         }
+
+try:
+    import pytesseract
+except ModuleNotFoundError:
+    pytesseract = None
+    # later, when you attempt OCR, check and raise a helpful error if None

@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import analysis, feedback
 from .database.database import client
+from .core.config import settings # <-- Import settings
 
 app = FastAPI(
-    title="Advanced Fake News Detection API",
+    title=settings.PROJECT_NAME,
     description="Analyzes content and cross-references with external sources.",
     version="2.0.0"
 )
@@ -16,11 +17,8 @@ async def shutdown_db_client():
     print("MongoDB connection closed.")
 
 # --- CORS Middleware ---
-# Allows your React/Vue/Angular frontend to communicate with this backend
 origins = [
-    "http://localhost:3000", # Example for React
-    "http://localhost:5173", # Example for Vite/Vue
-    "http://localhost:4200", # Example for Angular
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -32,11 +30,10 @@ app.add_middleware(
 )
 
 # --- API Routers ---
-# Include the routes from the different modules
-app.include_router(analysis.router, prefix="/api/v1", tags=["Analysis"])
-app.include_router(feedback.router, prefix="/api/v1", tags=["Feedback"])
+app.include_router(analysis.router, prefix=settings.API_V1_STR, tags=["Analysis"])
+app.include_router(feedback.router, prefix=settings.API_V1_STR, tags=["Feedback"])
 
 # --- Root Endpoint ---
 @app.get("/", tags=["Root"])
 async def read_root():
-    return {"message": "Welcome to the Fake News Detection API. Visit /docs for documentation."}
+    return {"message": f"Welcome to the {settings.PROJECT_NAME}. Visit /docs for documentation."}

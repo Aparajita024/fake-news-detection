@@ -3,7 +3,7 @@ import numpy as np
 
 # --- 1. Configuration ---
 # Path to your trained model file. Place it in the 'core' directory.
-MODEL_PATH = "app/core/fake_news_model.joblib"
+MODEL_PATH = "app/core/xgboost_model.pkl"
 # Define the class labels your model was trained on, in the correct order.
 CLASS_LABELS = ["Fake", "Real"]
 
@@ -11,12 +11,12 @@ CLASS_LABELS = ["Fake", "Real"]
 # Load the model once when the application starts to avoid reloading on every request.
 try:
     model = joblib.load(MODEL_PATH)
-    print(f"✅ Machine Learning model loaded successfully from {MODEL_PATH}")
+    print(f"Machine Learning model loaded successfully from {MODEL_PATH}")
 except FileNotFoundError:
-    print(f"❌ Error: Model file not found at {MODEL_PATH}. The predict function will return a default value.")
+    print(f"Error: Model file not found at {MODEL_PATH}. The predict function will return a default value.")
     model = None
 except Exception as e:
-    print(f"❌ An unexpected error occurred while loading the model: {e}")
+    print(f"An unexpected error occurred while loading the model: {e}")
     model = None
 
 # --- 3. Prediction Function ---
@@ -56,7 +56,7 @@ def predict(text: str) -> dict:
             "highlighted": ["mock_keyword", "suspicious_phrase"] # TODO: Implement real keyword extraction
         }
     except Exception as e:
-        print(f"❌ Error during model prediction: {e}")
+        print(f"Error during model prediction: {e}")
         return {
             "verdict": "Uncertain",
             "confidence": 0,

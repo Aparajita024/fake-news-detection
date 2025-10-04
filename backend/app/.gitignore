@@ -1,0 +1,18 @@
+# Environment variables - NEVER COMMIT THIS FILE
+.env
+
+# Python cache & artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE / Editor folders
+.vscode/
+.idea/

@@ -7,6 +7,9 @@ scikit-learn
 joblib
 requests
 beautifulsoup4
-python-speechrecognition
-motor 
+pytesseract
+SpeechRecognition
+motor
+whisper
+Pillow
 httpx

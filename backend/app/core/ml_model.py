@@ -1,16 +1,20 @@
 import joblib
 import numpy as np
+from pathlib import Path
 
 # --- 1. Configuration ---
-# Path to your trained model file. Place it in the 'core' directory.
-MODEL_PATH = "app/core/xgboost_model.pkl"
+# Resolve the model path relative to this file so loading works regardless of cwd.
+MODEL_PATH = Path(__file__).resolve().parent / "xgboost_model.pkl"
 # Define the class labels your model was trained on, in the correct order.
 CLASS_LABELS = ["Fake", "Real"]
 
 # --- 2. Model Loading ---
 # Load the model once when the application starts to avoid reloading on every request.
 try:
-    model = joblib.load(MODEL_PATH)
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(str(MODEL_PATH))
+
+    model = joblib.load(str(MODEL_PATH))
     print(f"Machine Learning model loaded successfully from {MODEL_PATH}")
 except FileNotFoundError:
     print(f"Error: Model file not found at {MODEL_PATH}. The predict function will return a default value.")

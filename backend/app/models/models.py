@@ -70,3 +70,17 @@ try:
 except ModuleNotFoundError:
     pytesseract = None
     # later, when you attempt OCR, check and raise a helpful error if None
+
+class VerificationQueryIn(BaseModel):
+    """Input model for a query to be verified against official PDFs."""
+    query: str = Field(..., min_length=10, description="The claim or question to verify.")
+
+class VerificationResponseOut(BaseModel):
+    """Output model for the PDF verification result."""
+    query: str
+    verified: Union[bool, str] # Can be true, false, or "unknown"
+    source: Optional[str] = None
+    page: Optional[int] = None
+    excerpt: Optional[str] = None
+    summary: str
+    suggested_sources: List[str] = []

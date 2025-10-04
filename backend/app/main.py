@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import analysis, feedback
 from .database.database import client
-from .core.config import settings # <-- Import settings
+from .core.config import settings 
+from .routes import verification
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -32,6 +33,7 @@ app.add_middleware(
 # --- API Routers ---
 app.include_router(analysis.router, prefix=settings.API_V1_STR, tags=["Analysis"])
 app.include_router(feedback.router, prefix=settings.API_V1_STR, tags=["Feedback"])
+app.include_router(verification.router, prefix=settings.API_V1_STR, tags=["Verification"])
 
 # --- Root Endpoint ---
 @app.get("/", tags=["Root"])

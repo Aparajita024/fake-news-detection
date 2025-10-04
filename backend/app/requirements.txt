@@ -13,3 +13,4 @@ motor
 whisper
 Pillow
 httpx
+PyMuPDF

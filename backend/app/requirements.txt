@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+scikit-learn
+joblib
+requests
+beautifulsoup4
+pytesseract
+python-speechrecognition
+motor 
+httpx

@@ -16,3 +16,4 @@ env/
 # IDE / Editor folders
 .vscode/
 .idea/
+config.py

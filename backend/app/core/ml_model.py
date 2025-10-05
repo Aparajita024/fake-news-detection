@@ -31,9 +31,11 @@ CORE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = CORE_DIR / "xgboost_model.pkl"
 VECTORIZER_PATH = CORE_DIR / "tfidf_vectorizer.pkl"
 VERSIONS_PATH = CORE_DIR / "model_versions.json"
-CLASS_LABELS = ["Fake", "Real"]
+# CLASS_LABELS = ["Fake", "Real"]
+CLASS_LABELS = ["Real", "Fake"]
 
 # --- 2. Version and Component Loading ---
+
 model = None
 vectorizer = None
 
@@ -121,11 +123,15 @@ def predict(text: str) -> dict:
         # Step 2: Get probability predictions
         print("Step 2: Predicting probabilities with XGBoost model...")
         probabilities = model.predict_proba(text_vector)[0]
-        print(f"Model output (probabilities): {probabilities}")
+        print(model.predict(text_vector))
+        # print(f"Model output (probabilities): {probabilities}")
 
         # Step 3: Determine verdict
-        predicted_class_index = np.argmax(probabilities)
+        # predicted_class_index = np.argmax(probabilities)
+        predicted_class_index = model.predict(text_vector)[0]
         verdict = CLASS_LABELS[predicted_class_index]
+        print(f"Predicted class index: {predicted_class_index} ({verdict})")
+        # confidence = int(probabilities[predicted_class_index] * 100)
         confidence = int(probabilities[predicted_class_index] * 100)
         print(f"Verdict: '{verdict}' with {confidence}% confidence.")
 

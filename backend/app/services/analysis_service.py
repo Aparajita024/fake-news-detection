@@ -9,6 +9,8 @@ from ..utils.helpers import fetch_article_text_from_url
 from .external_apis import x_service, reddit_service
 from .gemini_service import analyze_credibility
 from ..core.ml_model import predict
+import pytesseract
+
 
 # Whisper import
 try:
@@ -90,6 +92,7 @@ async def _get_combined_analysis(text: str):
          # Gemini result is always the first task
         if external_results and "verdict" in external_results[0]:
             gemini_result = external_results[0]
+            
             # Set gemini_needed to True if we have a valid result from Gemini
             gemini_needed = True 
         else:
@@ -163,18 +166,36 @@ async def analyze_url_service(url: str):
     return await _get_combined_analysis(article_text)
 
 
-async def analyze_image_service(image_bytes: bytes):
-    if pytesseract is None:
-        return None
+async def analyze_image_service(image_bytes: str):
+    # if pytesseract is None:
+    #     return None
     try:
         image = Image.open(io.BytesIO(image_bytes))
         text = await asyncio.to_thread(pytesseract.image_to_string, image)
+        print(image)
+        print(text)
         if not text.strip():
             return None
         return await _get_combined_analysis(text.strip())
     except Exception as e:
         print(f"OCR processing error: {e}")
         return None
+    # try:
+    #     # Open the image
+    #     image = Image.open(image_path)
+    #     print(f"Loaded image: {image}")
+
+    #     # Run pytesseract in a separate thread to avoid blocking
+    #     text = await asyncio.to_thread(pytesseract.image_to_string, image)
+    #     print(f"Extracted text:\n{text}")
+
+    #     if not text.strip():
+    #         return None
+    #     return await _get_combined_analysis(text.strip())
+
+    # except Exception as e:
+    #     print(f"OCR processing error: {e}")
+    #     return None
 
 
 async def analyze_voice_service(voice_file_path: str):

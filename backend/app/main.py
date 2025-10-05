@@ -20,6 +20,8 @@ async def shutdown_db_client():
 # --- CORS Middleware ---
 origins = [
     "http://localhost:3000",
+    "http://localhost:5173",  # Vite's default port
+    "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(

@@ -4,7 +4,7 @@ from ..services.feedback_services import save_feedback_service
 
 router = APIRouter()
 
-@router.post("/feedback", response_model=FeedbackOut, status_code=status.HTTP_201_CREATED)
+@router.post("/api/v1/feedback", response_model=FeedbackOut, status_code=status.HTTP_201_CREATED)
 async def receive_feedback(request: FeedbackIn):
     """Accepts a user rating (1-5) and stores it."""
     new_feedback = await save_feedback_service(request)

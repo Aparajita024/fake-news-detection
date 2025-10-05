@@ -9,13 +9,33 @@ from ..services.analysis_service import (
 
 router = APIRouter()
 
-@router.post("/analyze-text", response_model=FinalAnalysisResponse)
+@router.post("/analysis", response_model=FinalAnalysisResponse)
 async def analyze_text(request: TextIn):
     """Analyze a raw block of text."""
-    result = await analyze_text_service(request.text)
-    if not result:
-        raise HTTPException(status_code=500, detail="Analysis failed.")
-    return result
+    try:
+        if not request.text or not request.text.strip():
+            raise HTTPException(status_code=400, detail="Text cannot be empty")
+            
+        print(f"Analyzing text: {request.text[:100]}...")
+        result = await analyze_text_service(request.text)
+        
+        if not result:
+            raise HTTPException(status_code=500, detail="Analysis failed - no result returned")
+            
+        print(f"Analysis complete. Verdict: {result.get('analysis', {}).get('verdict')}")
+        return {
+            "analysis": result.get("analysis", {
+                "verdict": "Unknown",
+                "confidence": 0,
+                "explanation": "Analysis failed to return a valid result"
+            }),
+            "related_sources": result.get("related_sources", []),
+            "extracted_text": result.get("extracted_text", request.text)
+        }
+        
+    except Exception as e:
+        print(f"Error in analyze_text: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
 @router.post("/analyze-url", response_model=FinalAnalysisResponse)
 async def analyze_url(request: UrlIn):

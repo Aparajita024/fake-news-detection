@@ -4,8 +4,31 @@ import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 import { useState } from "react";
 
+interface HighlightedSegment {
+  text: string;
+  isSuspicious: boolean;
+}
+
+interface RelatedArticle {
+  title: string;
+  source: string;
+  url: string;
+}
+
+interface AnalysisData {
+  query: string;
+  confidence: number;
+  isFake: boolean;
+  highlightedQuery?: HighlightedSegment[];
+  explanation: {
+    verdict: string;
+    reasons?: string[];
+  };
+  relatedArticles?: RelatedArticle[];
+}
+
 interface ResultsSectionProps {
-  data: any;
+  data: AnalysisData;
   onReset: () => void;
 }
 
@@ -32,18 +55,22 @@ return (
         <Card className="bg-card/50 backdrop-blur-sm border-border p-6">
           <h2 className="text-xl mb-4 text-black">Analyzed Content</h2>
           <div className="text-lg leading-relaxed">
-            {data.highlightedQuery.map((segment: any, index: number) => (
-              <span
-                key={index}
-                className={
-                  segment.isSuspicious
-                    ? "bg-red-500/20 text-black px-1 rounded border-b-2 border-red-500/50"
-                    : "text-foreground"
-                }
-              >
-                {segment.text}
-              </span>
-            ))}
+            {data.highlightedQuery && data.highlightedQuery.length > 0 ? (
+              data.highlightedQuery.map((segment: any, index: number) => (
+                <span
+                  key={index}
+                  className={
+                    segment.isSuspicious
+                      ? "bg-red-500/20 text-black px-1 rounded border-b-2 border-red-500/50"
+                      : "text-foreground"
+                  }
+                >
+                  {segment.text}
+                </span>
+              ))
+            ) : (
+              <span className="text-foreground">{data.query || 'No content available'}</span>
+            )}
           </div>
         </Card>
 
@@ -133,12 +160,16 @@ return (
 
           <div className="space-y-3 pl-9">
             <p className="text-muted-foreground text-sm mb-3">Key indicators:</p>
-            {data.explanation.reasons.map((reason: string, index: number) => (
-              <div key={index} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
-                <p className="text-foreground">{reason}</p>
-              </div>
-            ))}
+            {data.explanation?.reasons && data.explanation.reasons.length > 0 ? (
+              data.explanation.reasons.map((reason: string, index: number) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
+                  <p className="text-foreground">{reason}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-foreground italic">No additional analysis available</p>
+            )}
           </div>
         </Card>
 
@@ -146,18 +177,22 @@ return (
         <Card className="bg-card/50 backdrop-blur-sm border-border p-6">
           <h2 className="text-xl mb-4 text-muted-foreground">Related Articles</h2>
           <div className="space-y-3">
-            {data.relatedArticles.map((article: any, index: number) => (
-              <a
-                key={index}
-                href={article.url}
-                className="block p-4 bg-accent/30 hover:bg-accent/50 rounded-xl border border-border hover:border-ring transition-all group"
-              >
-                <h3 className="text-foreground mb-2 group-hover:text-blue-400 transition-colors">
-                  {article.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">{article.source}</p>
-              </a>
-            ))}
+            {data.relatedArticles && data.relatedArticles.length > 0 ? (
+              data.relatedArticles.map((article: any, index: number) => (
+                <a
+                  key={index}
+                  href={article.url}
+                  className="block p-4 bg-accent/30 hover:bg-accent/50 rounded-xl border border-border hover:border-ring transition-all group"
+                >
+                  <h3 className="text-foreground mb-2 group-hover:text-blue-400 transition-colors">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{article.source}</p>
+                </a>
+              ))
+            ) : (
+              <p className="text-foreground italic">No related articles available</p>
+            )}
           </div>
         </Card>
 

@@ -40,7 +40,7 @@ class AnalysisVerdict(BaseModel):
 class FinalAnalysisResponse(BaseModel):
     """Defines the final, aggregated response structure for the API."""
     analysis: AnalysisVerdict = Field(description="The core verdict from our ML model.")
-    related_sources: List[SourceResult] = Field(description="Results from external sources supporting or contradicting the claim.")
+    related_sources: List[SourceResult] = Field(default=[], description="Results from external sources supporting or contradicting the claim.")
     extracted_text: str = Field(description="The primary text used for backend analysis (from body, URL, or OCR).")
 
 # --- Models for Request Inputs ---

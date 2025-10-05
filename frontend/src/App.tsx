@@ -95,18 +95,44 @@ export default function App() {
       const data = await response.json();
       
       // Transform backend response to match your frontend structure
-      const transformedData = {
-        query: data.query || input,
-        confidence: data.confidence || 0,
-        isFake: data.isFake || data.is_fake || false,
-        highlightedQuery: data.highlightedQuery || data.highlighted_query || [],
-        explanation: {
-          verdict: data.explanation?.verdict || data.verdict || "Unknown",
-          reasons: data.explanation?.reasons || data.reasons || []
-        },
-        relatedArticles: data.relatedArticles || data.related_articles || []
-      };
+      // const transformedData = {
+      //   query: data.query || (typeof input === 'string' ? input : 'Uploaded file'),
+      //   confidence: typeof data.confidence === 'number' ? data.confidence : 0,
+      //   isFake: Boolean(data.isFake || data.is_fake),
+      //   highlightedQuery: Array.isArray(data.highlightedQuery || data.highlighted_query) 
+      //     ? (data.highlightedQuery || data.highlighted_query) 
+      //     : undefined,
+      //   explanation: {
+      //     verdict: data.explanation?.verdict || data.verdict || "Unknown",
+      //     reasons: Array.isArray(data.explanation?.reasons || data.reasons) 
+      //       ? (data.explanation?.reasons || data.reasons) 
+      //       : undefined
+      //   },
+      //   relatedArticles: Array.isArray(data.relatedArticles || data.related_articles) 
+      //     ? (data.relatedArticles || data.related_articles) 
+      //     : undefined
+      // };
 
+      const transformedData = {
+        query: data.extracted_text || (typeof input === 'string' ? input : 'Uploaded file'),
+        confidence: data.analysis?.confidence ?? 0,
+        isFake: data.analysis?.verdict === "Fake", // Determine isFake from the verdict
+        highlightedQuery: data.analysis?.highlighted ?? [], // Use highlighted from the analysis object
+        explanation: {
+          verdict: data.analysis?.verdict || "Error",
+          // The backend sends a single explanation string, so we'll wrap it in an array for the frontend
+          reasons: data.analysis?.explanation ? [data.analysis.explanation] : ["No explanation provided."], 
+        },
+        // Map 'related_sources' to 'relatedArticles'
+        relatedArticles: (data.related_sources ?? []).flatMap((source: any) => 
+          (source.data ?? []).map((post: any) => ({
+            title: post.text,
+            source: post.source,
+            url: post.url,
+          }))
+        )
+      };
+      
       setAnalysisData(transformedData);
       setHasResult(true);
     } catch (error) {
@@ -120,7 +146,6 @@ export default function App() {
         highlightedQuery: [],
         explanation: {
           verdict: "Error",
-          reasons: [`Failed to analyze: ${err.message || 'Unknown error'}. Please ensure the backend server is running.`]
         },
         relatedArticles: []
       });

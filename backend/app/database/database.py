@@ -1,5 +1,5 @@
 import motor.motor_asyncio
-from ..core.config import settings # <-- Import the central settings object
+from ..core.config.settings import settings # <-- Import the central settings object
 
 # --- Database Client ---
 # Use the validated and type-safe settings from the config file.

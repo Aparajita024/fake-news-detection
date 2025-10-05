@@ -14,3 +14,5 @@ whisper
 Pillow
 httpx
 PyMuPDF
+scikit-learn == 1.3.0
+python-dotenv

@@ -14,7 +14,6 @@ interface RelatedArticle {
   source: string;
   url: string;
 }
-
 interface AnalysisData {
   query: string;
   confidence: number;
@@ -63,14 +62,14 @@ const submitFeedback = async (rating: number) => {
 return (
   <div className="py-12 relative z-20">
     {/* Back Button */}
-    <Button
-      onClick={onReset}
-      variant="ghost"
-      className="mb-8 text-muted-foreground hover:text-foreground"
-    >
-      <ArrowLeft className="mr-2" size={18} />
-      Check another
-    </Button>
+    
+  <button
+    onClick={onReset}
+    className="mb-8 text-muted-foreground hover:text-foreground hover:underline transition-colors flex items-center"
+  >
+  <ArrowLeft className="mr-2" size={18} />
+  Check another
+  </button>
 
 
       {/* Results Container */}
@@ -176,7 +175,7 @@ return (
             )}
             <div>
               <h2 className="text-xl mb-2 text-muted-foreground">Analysis Result</h2>
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4"> 
                 Verdict: <span className={data.isFake ? "text-red-400" : "text-green-400"}>{data.explanation.verdict}</span>
               </p>
             </div>

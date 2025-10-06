@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, HttpUrl
 from typing import List, Dict, Any, Optional, Union
-
+from bson import ObjectId
 # --- Models for External Sources ---
 
 class SocialMediaPost(BaseModel):
@@ -61,8 +61,7 @@ class FeedbackOut(BaseModel):
     class Config:
         populate_by_name = True
         json_encoders = {
-            # Convert MongoDB's ObjectId to a string
-            'id': lambda v: str(v)
+            ObjectId: str
         }
 
 try:

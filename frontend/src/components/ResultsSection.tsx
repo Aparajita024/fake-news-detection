@@ -36,6 +36,30 @@ export function ResultsSection({ data, onReset }: ResultsSectionProps) {
   const [rating, setRating] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
 
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+const submitFeedback = async (rating: number) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ rating }), // you can also add comment: "optional comment"
+    });
+
+    if (!response.ok) {
+      console.error("Failed to submit feedback", await response.text());
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Feedback submitted:", data);
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+  }
+};
+
 return (
   <div className="py-12 relative z-20">
     {/* Back Button */}
@@ -204,7 +228,10 @@ return (
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
-                  onClick={() => setRating(star)}
+                  onClick={() => {
+                    setRating(star);
+                    submitFeedback(star);
+                  }}
                   onMouseEnter={() => setHoveredStar(star)}
                   onMouseLeave={() => setHoveredStar(0)}
                   className="transition-all transform hover:scale-110"

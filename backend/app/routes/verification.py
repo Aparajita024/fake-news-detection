@@ -5,7 +5,7 @@ from ..services.verification_services import verify_query_against_pdfs
 router = APIRouter()
 
 @router.post(
-    "/api/v1/verify-claim-pdf",
+    "/verify-claim-pdf",
     response_model=VerificationResponseOut,
     summary="Verify a claim against official PDF documents",
     tags=["Verification"] # Group this endpoint separately in the docs

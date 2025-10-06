@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     MONGO_DETAILS: str = "mongodb://localhost:27017"
     DATABASE_NAME: str = "fakenews_detector"
     X_BEARER_TOKEN: str | None = None
-    GEMINI_API_KEY: str | None  # optional in dev
+    GEMINI_API_KEY: str | None  #optional in dev
 
     @property
     def is_gemini_configured(self) -> bool:
